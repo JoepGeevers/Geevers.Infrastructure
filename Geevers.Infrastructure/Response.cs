@@ -2,7 +2,6 @@
 {
     using System.Diagnostics;
     using System.Net;
-    using System.Net.Http;
 
     [DebuggerDisplay("{Status}: {Result}")]
     public class Response<T>
@@ -13,7 +12,7 @@
         {
             get
             {
-                return new HttpResponseMessage(this.Status).IsSuccessStatusCode;
+                return this.Status.IsSuccessStatusCode();
             }
         }
 
