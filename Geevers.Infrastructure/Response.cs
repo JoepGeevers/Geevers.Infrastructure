@@ -1,5 +1,6 @@
 ﻿namespace Geevers.Infrastructure
 {
+    using System;
     using System.Diagnostics;
     using System.Net;
 
@@ -29,6 +30,13 @@
         public Response(HttpStatusCode status)
         {
             this.Status = status;
+        }
+
+        [Obsolete("a future improvement will allow using higher resolution status codes")]
+        public Response(HttpStatusCode status, T result)
+        {
+            this.Status = status;
+            this.Result = result;
         }
 
         public static implicit operator Response<T>(T result)
