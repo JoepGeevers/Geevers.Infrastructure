@@ -5,10 +5,10 @@
     using System.Net;
 
     [DebuggerDisplay("{Status}: {Result}")]
-    public class Response<T>
+    public class Response<TResult>
     {
-        public HttpStatusCode Status { get; private set; }
-        public T Result { get; private set; }
+        public HttpStatusCode Status { get; internal set; }
+        public TResult Result { get; private set; }
         public bool IsSuccessStatusCode
         {
             get
@@ -17,11 +17,11 @@
             }
         }
 
-        private Response()
+        internal Response()
         {
         }
 
-        public Response(T result)
+        public Response(TResult result)
         {
             this.Status = HttpStatusCode.OK;
             this.Result = result;
@@ -29,6 +29,11 @@
 
         public Response(HttpStatusCode status)
         {
+            if (status == HttpStatusCode.OK)
+            {
+                throw new InvalidOperationException("You may not construct a Response<TResult> with HttpStatusCode.OK. Please use HttpStatusCode.NoContent or an implicit result");
+            }
+
             this.Status = status;
         }
 
@@ -39,14 +44,14 @@
             this.Result = result;
         }
 
-        public static implicit operator Response<T>(T result)
+        public static implicit operator Response<TResult>(TResult result)
         {
-            return new Response<T>(result);
+            return new Response<TResult>(result);
         }
 
-        public static implicit operator Response<T>(HttpStatusCode status)
+        public static implicit operator Response<TResult>(HttpStatusCode status)
         {
-            return new Response<T>(status);
+            return new Response<TResult>(status);
         }
     }
 }
