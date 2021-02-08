@@ -37,7 +37,7 @@
             this.Status = status;
         }
 
-        [Obsolete("a future improvement will allow using higher resolution status codes")]
+        [Obsolete("Was used to trick Error results into Response. Will be removed when TError is introduced")]
         public Response(HttpStatusCode status, TResult result)
         {
             this.Status = status;
