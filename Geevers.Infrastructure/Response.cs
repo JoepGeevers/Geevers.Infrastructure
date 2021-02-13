@@ -9,6 +9,7 @@
     {
         public HttpStatusCode Status { get; internal set; }
         public TResult Result { get; private set; }
+
         public bool IsSuccessStatusCode
         {
             get
@@ -42,6 +43,19 @@
         {
             this.Status = status;
             this.Result = result;
+        }
+
+        public bool Is(HttpStatusCode cue, out TResult result, out HttpStatusCode status)
+        {
+            result = this.Result;
+            status = this.Status;
+
+            return status == cue;
+        }
+
+        public bool IsNot(HttpStatusCode cue, out TResult result, out HttpStatusCode status)
+        {
+            return false == this.Is(cue, out result, out status);
         }
 
         public static implicit operator Response<TResult>(TResult result)

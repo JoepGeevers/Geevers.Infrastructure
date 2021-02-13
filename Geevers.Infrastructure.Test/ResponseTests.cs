@@ -64,5 +64,83 @@ namespace Geevers.Infrastructure.Test
             Assert.IsTrue(responses.All(p => p.Response.Status == p.Status));
             Assert.IsTrue(responses.All(p => p.Response.Result == null));
         }
+
+        [TestMethod]
+        public void IfResponseStatus_DoesNot_MatchCondition_Is_ReturnsFalseAndOutVarsAreSet()
+        {
+            // arrange
+            Response<int> response = new Response<int>(HttpStatusCode.Ambiguous, 42);
+
+            var statii = Enum.GetValues(typeof(HttpStatusCode))
+                .Cast<HttpStatusCode>()
+                .Where(s => s != HttpStatusCode.Ambiguous);
+
+            // act
+            var responses = statii
+                .Select(s => {
+                    var a = response.Is(s, out var result, out var status);
+
+                    return (InStatus: s, IsResult: a, OutResult: result, OutStatus: s);
+                });
+
+            // assert
+            Assert.IsTrue(responses.All(p => p.InStatus == p.OutStatus));
+            Assert.IsTrue(responses.All(p => false == p.IsResult));
+            Assert.IsTrue(responses.All(p => p.OutResult == 42));
+        }
+
+        [TestMethod]
+        public void IfResponseStatus_Does_MatchCondition_Is_ReturnsTrueAndOutVarsAreSet()
+        {
+            // arrange
+            Response<int> response = new Response<int>(HttpStatusCode.Ambiguous, 42);
+
+            // act
+            var IsResult = response.Is(HttpStatusCode.Ambiguous, out var result, out var status);
+
+            // assert
+            Assert.AreEqual(response.Status, status);
+            Assert.AreEqual(response.Result, result);
+            Assert.IsTrue(IsResult);
+        }
+
+        [TestMethod]
+        public void IfResponseStatus_DoesNot_MatchCondition_NotIs_ReturnsTrueAndOutVarsAreSet()
+        {
+            // arrange
+            Response<int> response = new Response<int>(HttpStatusCode.Ambiguous, 42);
+
+            var statii = Enum.GetValues(typeof(HttpStatusCode))
+                .Cast<HttpStatusCode>()
+                .Where(s => s != HttpStatusCode.Ambiguous);
+
+            // act
+            var responses = statii
+                .Select(s => {
+                    var a = response.IsNot(s, out var result, out var status);
+
+                    return (InStatus: s, IsResult: a, OutResult: result, OutStatus: s);
+                });
+
+            // assert
+            Assert.IsTrue(responses.All(p => p.IsResult));
+            Assert.IsTrue(responses.All(p => p.InStatus == p.OutStatus));
+            Assert.IsTrue(responses.All(p => p.OutResult == 42));
+        }
+
+        [TestMethod]
+        public void IfResponseStatus_Does_MatchCondition_IsNot_ReturnsFalseAndOutVarsAreSet()
+        {
+            // arrange
+            Response<int> response = new Response<int>(HttpStatusCode.Ambiguous, 42);
+
+            // act
+            var IsResult = response.IsNot(HttpStatusCode.Ambiguous, out var result, out var status);
+
+            // assert
+            Assert.IsFalse(IsResult);
+            Assert.AreEqual(response.Status, status);
+            Assert.AreEqual(response.Result, result);
+        }
     }
 }
