@@ -8,7 +8,7 @@
     public class Response<TResult>
     {
         public HttpStatusCode Status { get; internal set; }
-        public TResult Result { get; private set; }
+        public TResult Result { get; internal set; }
 
         public bool IsSuccessStatusCode
         {
@@ -32,7 +32,7 @@
         {
             if (status == HttpStatusCode.OK)
             {
-                throw new InvalidOperationException("You may not construct a Response<TResult> with HttpStatusCode.OK. Please use HttpStatusCode.NoContent or an implicit result");
+                throw new InvalidOperationException("You should not need to construct a Response<TResult> with HttpStatusCode.OK. Did you mean NoContent? IF not, please either just return the result, or a `new OK(T)`");
             }
 
             this.Status = status;
