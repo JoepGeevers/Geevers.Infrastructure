@@ -38,8 +38,7 @@
             this.Status = status;
         }
 
-        [Obsolete("Was used to trick Error results into Response. Will be removed when TError is introduced")]
-        public Response(HttpStatusCode status, TResult result)
+        internal Response(HttpStatusCode status, TResult result)
         {
             this.Status = status;
             this.Result = result;
@@ -66,6 +65,11 @@
         public static implicit operator Response<TResult>(HttpStatusCode status)
         {
             return new Response<TResult>(status);
+        }
+
+        public static implicit operator Response<TResult>((HttpStatusCode status, TResult result) response)
+        {
+            return new Response<TResult>(response.status, response.result);
         }
     }
 }
