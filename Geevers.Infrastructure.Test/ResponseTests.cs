@@ -29,7 +29,7 @@ namespace Geevers.Infrastructure.Test
         public void ImplicitlyCastingStatusOkResponse_ThrowsException()
         {
             // arrange
-            Response<Color> response = null;
+            Response<Color> response = default;
             Exception exception = null;
 
             // act
@@ -43,7 +43,7 @@ namespace Geevers.Infrastructure.Test
             }
 
             // assert
-            Assert.IsNull(response);
+            Assert.AreEqual(default, response);
             Assert.IsNotNull(exception);
             Assert.IsInstanceOfType(exception, typeof(InvalidOperationException));
         }
@@ -141,6 +141,30 @@ namespace Geevers.Infrastructure.Test
             Assert.IsFalse(IsResult);
             Assert.AreEqual(response.Status, status);
             Assert.AreEqual(response.Result, result);
+        }
+
+        [TestMethod]
+        public void DefaultResponse_HasStatusNotImplemented_AndDefaultResult()
+        {
+            // arrange
+            Response<Color> response = default;
+
+            // act
+            // assert
+            Assert.AreEqual(HttpStatusCode.NotImplemented, response.Status);
+            Assert.AreEqual(default, response.Result);
+        }
+
+        [TestMethod]
+        public void ResponseCanBeCreatedAsTuple()
+        {
+            // arrange
+            Response<Color> response = (HttpStatusCode.RequestEntityTooLarge, Color.Blue);
+
+            // act
+            // assert
+            Assert.AreEqual(HttpStatusCode.RequestEntityTooLarge, response.Status);
+            Assert.AreEqual(Color.Blue, response.Result);
         }
     }
 }

@@ -5,9 +5,22 @@
     using System.Net;
 
     [DebuggerDisplay("{Status}: {Result}")]
-    public class Response<TResult>
+    public struct Response<TResult>
     {
-        public HttpStatusCode Status { get; internal set; }
+        private HttpStatusCode? status;
+
+        public HttpStatusCode Status
+        {
+            get
+            {
+                return this.status ?? HttpStatusCode.NotImplemented;
+            }
+            internal set
+            {
+                this.status = value;
+            }
+        }
+
         public TResult Result { get; internal set; }
 
         public bool IsSuccessStatusCode
@@ -18,13 +31,9 @@
             }
         }
 
-        internal Response()
-        {
-        }
-
         public Response(TResult result)
         {
-            this.Status = HttpStatusCode.OK;
+            this.status = HttpStatusCode.OK;
             this.Result = result;
         }
 
@@ -35,12 +44,13 @@
                 throw new InvalidOperationException("You should not need to construct a Response<TResult> with HttpStatusCode.OK. Did you mean NoContent? IF not, please either just return the result, or a `new OK(T)`");
             }
 
-            this.Status = status;
+            this.status = status;
+            this.Result = default;
         }
 
         internal Response(HttpStatusCode status, TResult result)
         {
-            this.Status = status;
+            this.status = status;
             this.Result = result;
         }
 
