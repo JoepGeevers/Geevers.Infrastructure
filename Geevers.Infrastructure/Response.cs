@@ -41,7 +41,7 @@
         {
             if (status == HttpStatusCode.OK)
             {
-                throw new InvalidOperationException("You should not need to construct a Response<TResult> with HttpStatusCode.OK. Did you mean NoContent? IF not, please either just return the result, or a `new OK(T)`");
+                throw new InvalidOperationException("You should not need to construct a Response<TResult> with HttpStatusCode.OK. Did you mean NoContent? If not, please either just return the result, or a `new OK(T)`");
             }
 
             this.status = status;
