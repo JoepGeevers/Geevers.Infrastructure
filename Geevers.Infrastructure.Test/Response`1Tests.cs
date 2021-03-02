@@ -9,7 +9,7 @@ namespace Geevers.Infrastructure.Test
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class ResponseTests
+    public class Response_1_Tests
     {
         [TestMethod]
         public void WhenImplicitlyCastingTypeToResponse_ResponseStatusIsOk()
