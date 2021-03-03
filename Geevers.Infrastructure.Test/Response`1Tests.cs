@@ -1,6 +1,7 @@
 namespace Geevers.Infrastructure.Test
 {
     using System;
+    using System.Collections.Generic;
     using System.Drawing;
     using System.Linq;
     using System.Net;
@@ -165,6 +166,19 @@ namespace Geevers.Infrastructure.Test
             // assert
             Assert.AreEqual(HttpStatusCode.RequestEntityTooLarge, response.Status);
             Assert.AreEqual(Color.Blue, response.Result);
+        }
+
+        [TestMethod]
+        public void WhenTResultIsAnInterface_WeNeedAccessToResponseConstructorToCreateAResponse()
+        {
+            // arrange
+            ICollection<Color> colors = new List<Color>();
+
+            // act
+            Response<ICollection<Color>> response = new Response<ICollection<Color>>(colors); // Compiler does not allow `Response<ICollection<Color>> response = colors`
+
+            // assert
+            Assert.AreEqual(colors, response.Result);
         }
     }
 }
