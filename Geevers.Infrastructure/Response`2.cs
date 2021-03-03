@@ -7,19 +7,13 @@
     [DebuggerDisplay("{DebuggerDisplay}")]
     public struct Response<TResult, TError>
     {
-        private HttpStatusCode? status;
+        public HttpStatusCode Status => this.response.Status;
+        public bool IsSuccessStatusCode => this.response.IsSuccessStatusCode;
 
-        public HttpStatusCode Status
-        {
-            get
-            {
-                return this.status ?? HttpStatusCode.NotImplemented;
-            }
-            internal set
-            {
-                this.status = value;
-            }
-        }
+        public TResult Result => this.response.Result;
+        public TError Error { get; internal set; }
+
+        private Response<TResult> response;
 
         private string DebuggerDisplay
         {
@@ -31,45 +25,9 @@
             }
         }
 
-        public TResult Result { get; internal set; }
-        public TError Error { get; internal set; }
-
-        public bool IsSuccessStatusCode
+        internal Response(Response<TResult> response)
         {
-            get
-            {
-                return this.Status.IsSuccessStatusCode();
-            }
-        }
-
-        public Response(TResult result)
-        {
-            this.status = HttpStatusCode.OK;
-            this.Result = result;
-            this.Error = default;
-        }
-
-        public Response(HttpStatusCode status)
-        {
-            if (status == HttpStatusCode.OK)
-            {
-                throw new InvalidOperationException("You should not need to construct a Response<TResult> with HttpStatusCode.OK. Did you mean NoContent? If not, please either just return the result, or a `new OK(T)`");
-            }
-
-            this.status = status;
-            this.Result = default;
-            this.Error = default;
-        }
-
-        internal Response(HttpStatusCode status, TResult result)
-        {
-            if (false == status.IsSuccessStatusCode())
-            {
-                throw new InvalidOperationException("You cannot construct a Response with an unsuccessfull statuscode and a result");
-            }
-
-            this.status = status;
-            this.Result = result;
+            this.response = response;
             this.Error = default;
         }
 
@@ -80,29 +38,13 @@
                 throw new InvalidOperationException("You cannot construct a Response with a successfull statuscode and an error");
             }
 
-            this.status = status;
-            this.Result = default;
+            this.response = status;
             this.Error = error;
         }
 
-        public static implicit operator Response<TResult, TError>(TResult result)
-        {
-            return new Response<TResult, TError>(result);
-        }
-
-        public static implicit operator Response<TResult, TError>(HttpStatusCode status)
-        {
-            return new Response<TResult, TError>(status);
-        }
-
-        public static implicit operator Response<TResult, TError>((HttpStatusCode status, TResult result) response)
-        {
-            return new Response<TResult, TError>(response.status, response.result);
-        }
-
-        public static implicit operator Response<TResult, TError>((HttpStatusCode status, TError error) response)
-        {
-            return new Response<TResult, TError>(response.status, response.error);
-        }
+        public static implicit operator Response<TResult, TError>(TResult result) => new Response<TResult, TError>(result);
+        public static implicit operator Response<TResult, TError>(HttpStatusCode status) => new Response<TResult, TError>(status);
+        public static implicit operator Response<TResult, TError>((HttpStatusCode status, TResult result) response) => new Response<TResult, TError>((response.status, response.result));
+        public static implicit operator Response<TResult, TError>((HttpStatusCode status, TError error) response) => new Response<TResult, TError>(response.status, response.error);
     }
 }
