@@ -14,7 +14,7 @@
 
         public bool IsSuccessStatusCode => this.Status.IsSuccessStatusCode();
 
-        public Response(TResult result)
+        internal Response(TResult result)
         {
             this.status = HttpStatusCode.OK;
             this.Result = result;

@@ -169,13 +169,13 @@ namespace Geevers.Infrastructure.Test
         }
 
         [TestMethod]
-        public void WhenTResultIsAnInterface_WeNeedAccessToResponseConstructorToCreateAResponse()
+        public void CreatingResultFromInterfaceCanBeDoneWithTheTupleOperator()
         {
             // arrange
             ICollection<Color> colors = new List<Color>();
 
             // act
-            Response<ICollection<Color>> response = new Response<ICollection<Color>>(colors); // Compiler does not allow `Response<ICollection<Color>> response = colors`
+            Response<ICollection<Color>> response = (HttpStatusCode.OK, colors); // Compiler does not allow `Response<ICollection<Color>> response = colors`
 
             // assert
             Assert.AreEqual(colors, response.Result);
