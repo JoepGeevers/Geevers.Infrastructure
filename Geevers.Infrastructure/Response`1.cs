@@ -7,29 +7,12 @@
     [DebuggerDisplay("{Status}: {Result}")]
     public struct Response<TResult>
     {
-        private HttpStatusCode? status;
-
-        public HttpStatusCode Status
-        {
-            get
-            {
-                return this.status ?? HttpStatusCode.NotImplemented;
-            }
-            internal set
-            {
-                this.status = value;
-            }
-        }
-
+        public HttpStatusCode Status => this.status ?? HttpStatusCode.NotImplemented;
         public TResult Result { get; internal set; }
 
-        public bool IsSuccessStatusCode
-        {
-            get
-            {
-                return this.Status.IsSuccessStatusCode();
-            }
-        }
+        private HttpStatusCode? status;
+
+        public bool IsSuccessStatusCode => this.Status.IsSuccessStatusCode();
 
         public Response(TResult result)
         {
@@ -67,19 +50,8 @@
             return false == this.Is(cue, out result, out status);
         }
 
-        public static implicit operator Response<TResult>(TResult result)
-        {
-            return new Response<TResult>(result);
-        }
-
-        public static implicit operator Response<TResult>(HttpStatusCode status)
-        {
-            return new Response<TResult>(status);
-        }
-
-        public static implicit operator Response<TResult>((HttpStatusCode status, TResult result) response)
-        {
-            return new Response<TResult>(response.status, response.result);
-        }
+        public static implicit operator Response<TResult>(TResult result) => new Response<TResult>(result);
+        public static implicit operator Response<TResult>(HttpStatusCode status) => new Response<TResult>(status);
+        public static implicit operator Response<TResult>((HttpStatusCode status, TResult result) response) => new Response<TResult>(response.status, response.result);
     }
 }
