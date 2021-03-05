@@ -8,6 +8,8 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Version>1.1.0</Version>
     <PackageIcon>response-nuget-icon.png</PackageIcon>
+    <PackageProjectUrl>https://github.com/Heras/Geevers.Infrastructure</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Heras/Geevers.Infrastructure</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
