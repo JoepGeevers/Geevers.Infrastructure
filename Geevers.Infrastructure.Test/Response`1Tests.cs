@@ -1,6 +1,7 @@
 namespace Geevers.Infrastructure.Test
 {
     using System;
+    using System.Collections.Generic;
     using System.Drawing;
     using System.Linq;
     using System.Net;
@@ -9,7 +10,7 @@ namespace Geevers.Infrastructure.Test
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class ResponseTests
+    public class Response_1_Tests
     {
         [TestMethod]
         public void WhenImplicitlyCastingTypeToResponse_ResponseStatusIsOk()
@@ -165,6 +166,19 @@ namespace Geevers.Infrastructure.Test
             // assert
             Assert.AreEqual(HttpStatusCode.RequestEntityTooLarge, response.Status);
             Assert.AreEqual(Color.Blue, response.Result);
+        }
+
+        [TestMethod]
+        public void CreatingResultFromInterfaceCanBeDoneWithTheTupleOperator()
+        {
+            // arrange
+            ICollection<Color> colors = new List<Color>();
+
+            // act
+            Response<ICollection<Color>> response = (HttpStatusCode.OK, colors); // Compiler does not allow `Response<ICollection<Color>> response = colors`
+
+            // assert
+            Assert.AreEqual(colors, response.Result);
         }
     }
 }
