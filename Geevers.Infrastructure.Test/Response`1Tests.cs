@@ -50,12 +50,36 @@ namespace Geevers.Infrastructure.Test
         }
 
         [TestMethod]
-        public void ImplicitlyCastingStatusOtherThenOkResponse_ResponseGetsThatStatus()
+        public void ImplicitlyCastingStatusNoContentResponse_ThrowsException()
+        {
+            // arrange
+            Response<Color> response = default;
+            Exception exception = null;
+
+            // act
+            try
+            {
+                response = HttpStatusCode.NoContent;
+            }
+            catch (Exception e)
+            {
+                exception = e;
+            }
+
+            // assert
+            Assert.AreEqual(default, response);
+            Assert.IsNotNull(exception);
+            Assert.IsInstanceOfType(exception, typeof(InvalidOperationException));
+        }
+
+        [TestMethod]
+        public void ImplicitlyCastingStatusOtherThenOkOrNoContent_ResponseGetsThatStatus()
         {
             // arrange
             var statii = Enum.GetValues(typeof(HttpStatusCode))
                 .Cast<HttpStatusCode>()
-                .Where(s => s != HttpStatusCode.OK);
+                .Where(s => s != HttpStatusCode.OK)
+                .Where(s => s != HttpStatusCode.NoContent);
 
             // act
             var responses = statii

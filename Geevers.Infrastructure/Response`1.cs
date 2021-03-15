@@ -22,13 +22,18 @@
 
         internal Response(HttpStatusCode status)
         {
-            if (status == HttpStatusCode.OK)
-            {
-                throw new InvalidOperationException("You should not need to construct a Response<TResult> with HttpStatusCode.OK. Did you mean NoContent? If not, please either just return the result, or a `new OK(T)`");
-            }
-
             this.status = status;
             this.Result = default;
+
+            if (status == HttpStatusCode.OK)
+            {
+                throw new InvalidOperationException($"You cannot create a Response from statuscode OK because it múst have a result. Either return a result or use HttpStatusCode as a return type and NoContent as a value");
+            }
+
+            if (status == HttpStatusCode.NoContent)
+            {
+                throw new InvalidOperationException("You cannot create a Response with statuscode NoContent because Response is supposed to have a result. Either return a result or use HttpStatusCode as a return type and NoContent as a value");
+            }
         }
 
         internal Response(HttpStatusCode status, TResult result)
