@@ -42,7 +42,7 @@
             this.Error = error;
         }
 
-        public bool Is(HttpStatusCode cue, out TResult result, out TError error, out HttpStatusCode status)
+        public bool Is(HttpStatusCode cue, out TResult result, out HttpStatusCode status, out TError error)
         {
             result = this.Result;
             error = this.Error;
@@ -51,9 +51,9 @@
             return status == cue;
         }
 
-        public bool IsNot(HttpStatusCode cue, out TResult result, out TError error, out HttpStatusCode status)
+        public bool IsNot(HttpStatusCode cue, out TResult result, out HttpStatusCode status, out TError error)
         {
-            return false == this.Is(cue, out result, out error, out status);
+            return false == this.Is(cue, out result, out status, out error);
         }
 
         public static implicit operator Response<TResult, TError>(TResult result) => new Response<TResult, TError>(result);

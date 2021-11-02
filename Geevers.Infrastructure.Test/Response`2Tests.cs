@@ -8,7 +8,7 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class Response_2Tests
+    public class Response_2_Tests
     {
         [TestMethod]
         public void DefaultResponse_HasStatusNotImplemented_AndDefaultResult()
