@@ -5,19 +5,19 @@
     using System.Net;
 
     [DebuggerDisplay("{Status}: {Result}")]
-    public struct Response<TResult>
+    public struct Response<TValue>
     {
-        public HttpStatusCode Status => this.status ?? HttpStatusCode.NotImplemented;
-        public TResult Result { get; internal set; }
-
         private HttpStatusCode? status;
+        private TValue value;
 
+        public HttpStatusCode Status => this.status ?? HttpStatusCode.NotImplemented;
         public bool IsSuccessStatusCode => this.Status.IsSuccessStatusCode();
+        public TValue Value => this.IsSuccessStatusCode ? this.value : default;
 
-        internal Response(TResult result)
+        internal Response(TValue value)
         {
             this.status = HttpStatusCode.OK;
-            this.Result = result;
+            this.value = value;
         }
 
         internal Response(HttpStatusCode status)
@@ -28,30 +28,30 @@
             }
 
             this.status = status;
-            this.Result = default;
+            this.value = default;
         }
 
-        internal Response(HttpStatusCode status, TResult result)
+        internal Response(HttpStatusCode status, TValue value)
         {
             this.status = status;
-            this.Result = result;
+            this.value = value;
         }
 
-        public bool Is(HttpStatusCode cue, out TResult result, out HttpStatusCode status)
+        public bool Is(HttpStatusCode cue, out TValue value, out HttpStatusCode status)
         {
-            result = this.Result;
             status = this.Status;
+            value = this.value;
 
             return status == cue;
         }
 
-        public bool IsNot(HttpStatusCode cue, out TResult result, out HttpStatusCode status)
+        public bool IsNot(HttpStatusCode cue, out TValue value, out HttpStatusCode status)
         {
-            return false == this.Is(cue, out result, out status);
+            return false == this.Is(cue, out value, out status);
         }
 
-        public static implicit operator Response<TResult>(TResult result) => new Response<TResult>(result);
-        public static implicit operator Response<TResult>(HttpStatusCode status) => new Response<TResult>(status);
-        public static implicit operator Response<TResult>((HttpStatusCode status, TResult result) response) => new Response<TResult>(response.status, response.result);
+        public static implicit operator Response<TValue>(TValue value) => new Response<TValue>(value);
+        public static implicit operator Response<TValue>(HttpStatusCode status) => new Response<TValue>(status);
+        public static implicit operator Response<TValue>((HttpStatusCode status, TValue value) response) => new Response<TValue>(response.status, response.value);
     }
 }
