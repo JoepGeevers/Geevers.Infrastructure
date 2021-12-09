@@ -12,7 +12,8 @@
 
         public HttpStatusCode Status => this.status ?? HttpStatusCode.NotImplemented;
         public bool IsSuccessStatusCode => this.Status.IsSuccessStatusCode();
-        public TValue Value => this.IsSuccessStatusCode ? this.value : default;
+        public TValue Result => this.IsSuccessStatusCode ? this.value : default;
+        public TValue Error => this.IsSuccessStatusCode ? default : this.value;
 
         internal Response(TValue value)
         {

@@ -23,7 +23,7 @@ namespace Geevers.Infrastructure.Test
 
             // assert
             Assert.AreEqual(HttpStatusCode.OK, response.Status);
-            Assert.AreEqual(address, response.Value);
+            Assert.AreEqual(address, response.Result);
         }
 
         [TestMethod]
@@ -63,7 +63,7 @@ namespace Geevers.Infrastructure.Test
 
             // assert
             Assert.IsTrue(responses.All(p => p.Response.Status == p.Status));
-            Assert.IsTrue(responses.All(p => p.Response.Value == null));
+            Assert.IsTrue(responses.All(p => p.Response.Result == null));
         }
 
         [TestMethod]
@@ -101,7 +101,7 @@ namespace Geevers.Infrastructure.Test
 
             // assert
             Assert.AreEqual(response.Status, status);
-            Assert.AreEqual(response.Value, result);
+            Assert.AreEqual(response.Result, result);
             Assert.IsTrue(IsResult);
         }
 
@@ -141,7 +141,7 @@ namespace Geevers.Infrastructure.Test
             // assert
             Assert.IsFalse(IsResult);
             Assert.AreEqual(response.Status, status);
-            Assert.AreEqual(response.Value, result);
+            Assert.AreEqual(response.Result, result);
         }
 
         [TestMethod]
@@ -153,7 +153,7 @@ namespace Geevers.Infrastructure.Test
             // act
             // assert
             Assert.AreEqual(HttpStatusCode.NotImplemented, response.Status);
-            Assert.AreEqual(default, response.Value);
+            Assert.AreEqual(default, response.Result);
         }
 
         [TestMethod]
@@ -165,7 +165,7 @@ namespace Geevers.Infrastructure.Test
             // act
             // assert
             Assert.AreEqual(HttpStatusCode.Accepted, response.Status);
-            Assert.AreEqual(Color.Blue, response.Value);
+            Assert.AreEqual(Color.Blue, response.Result);
         }
 
         [TestMethod]
@@ -178,7 +178,7 @@ namespace Geevers.Infrastructure.Test
             Response<ICollection<Color>> response = (HttpStatusCode.OK, colors); // Compiler does not allow `Response<ICollection<Color>> response = colors`
 
             // assert
-            Assert.AreEqual(colors, response.Value);
+            Assert.AreEqual(colors, response.Result);
         }
 
         [TestMethod]
@@ -194,7 +194,7 @@ namespace Geevers.Infrastructure.Test
                 .Select(s => (Response<int>)(s, 42));
 
             // assert
-            Assert.IsTrue(responses.All(r => r.Value == 42));
+            Assert.IsTrue(responses.All(r => r.Result == 42));
         }
 
         [TestMethod]
@@ -210,7 +210,39 @@ namespace Geevers.Infrastructure.Test
                 .Select(s => (Response<int>)(s, 42));
 
             // assert
-            Assert.IsTrue(responses.All(r => r.Value == default));
+            Assert.IsTrue(responses.All(r => r.Result == default));
+        }
+
+        [TestMethod]
+        public void EveryResponseCreatedWithSuccessfullStatusAndResult_PropertyErrorHoldsDefault()
+        {
+            // arrange
+            var statii = Enum.GetValues(typeof(HttpStatusCode))
+                .Cast<HttpStatusCode>()
+                .Where(s => s.IsSuccessStatusCode());
+
+            // act
+            var responses = statii
+                .Select(s => (Response<int>)(s, 42));
+
+            // assert
+            Assert.IsTrue(responses.All(r => r.Error == default));
+        }
+
+        [TestMethod]
+        public void EveryResponseCreatedWithUnsuccessfullStatusAndResult_PropertyErrorHoldsValue()
+        {
+            // arrange
+            var statii = Enum.GetValues(typeof(HttpStatusCode))
+                .Cast<HttpStatusCode>()
+                .Where(s => false == s.IsSuccessStatusCode());
+
+            // act
+            var responses = statii
+                .Select(s => (Response<int>)(s, 42));
+
+            // assert
+            Assert.IsTrue(responses.All(r => r.Error == 42));
         }
     }
 }

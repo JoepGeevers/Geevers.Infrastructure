@@ -10,7 +10,7 @@
         public HttpStatusCode Status => this.response.Status;
         public bool IsSuccessStatusCode => this.response.IsSuccessStatusCode;
 
-        public TResult Result => this.response.Value;
+        public TResult Result => this.response.Result;
         public TError Error { get; internal set; }
 
         private Response<TResult> response;
