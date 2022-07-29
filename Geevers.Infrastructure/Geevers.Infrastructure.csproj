@@ -6,15 +6,17 @@
     <Authors>Joep Geevers</Authors>
     <Company />
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Version>2.0.0.0</Version>
+    <Version>2.1.0</Version>
     <PackageIcon>response-nuget-icon.png</PackageIcon>
     <PackageProjectUrl>https://github.com/Heras/Geevers.Infrastructure</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Heras/Geevers.Infrastructure</RepositoryUrl>
-    <AssemblyVersion>2.0.0.0</AssemblyVersion>
-    <FileVersion>2.0.0.0</FileVersion>
   </PropertyGroup>
 
-  <ItemGroup>
+	<PropertyGroup>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+	</PropertyGroup>
+
+	<ItemGroup>
     <None Include="response-nuget-icon.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
