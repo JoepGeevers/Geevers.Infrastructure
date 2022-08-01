@@ -4,24 +4,19 @@
     using System.Diagnostics;
     using System.Net;
 
-    [DebuggerDisplay("{Status}: {Result}")]
+    [DebuggerDisplay("{Status}: {Value}")]
     public struct Response<TValue>
     {
         private HttpStatusCode? status;
-        private TValue value;
 
         public HttpStatusCode Status => this.status ?? HttpStatusCode.NotImplemented;
         public bool IsSuccessStatusCode => this.Status.IsSuccessStatusCode();
-        public TValue Result => this.IsSuccessStatusCode ? this.value : default;
-        public TValue Error => this.IsSuccessStatusCode ? default : this.value;
-
-        [Obsolete("Use `Result` or `Error` to obtain value. `Value` will be removed in a future version")]
-        public TValue Value => this.value;
+        public TValue Value { get; private set; }
 
         internal Response(TValue value)
         {
             this.status = HttpStatusCode.OK;
-            this.value = value;
+            this.Value = value;
         }
 
         internal Response(HttpStatusCode status)
@@ -32,19 +27,19 @@
             }
 
             this.status = status;
-            this.value = default;
+            this.Value = default;
         }
 
         internal Response(HttpStatusCode status, TValue value)
         {
             this.status = status;
-            this.value = value;
+            this.Value = value;
         }
 
         public bool Is(HttpStatusCode cue, out TValue value, out HttpStatusCode status)
         {
             status = this.Status;
-            value = this.value;
+            value = this.Value;
 
             return status == cue;
         }

@@ -23,7 +23,7 @@ namespace Geevers.Infrastructure.Test
 
             // assert
             Assert.AreEqual(HttpStatusCode.OK, response.Status);
-            Assert.AreEqual(address, response.Result);
+            Assert.AreEqual(address, response.Value);
         }
 
         [TestMethod]
@@ -63,7 +63,7 @@ namespace Geevers.Infrastructure.Test
 
             // assert
             Assert.IsTrue(responses.All(p => p.Response.Status == p.Status));
-            Assert.IsTrue(responses.All(p => p.Response.Result == null));
+            Assert.IsTrue(responses.All(p => p.Response.Value == null));
         }
 
         [TestMethod]
@@ -101,7 +101,7 @@ namespace Geevers.Infrastructure.Test
 
             // assert
             Assert.AreEqual(response.Status, status);
-            Assert.AreEqual(response.Result, result);
+            Assert.AreEqual(response.Value, result);
             Assert.IsTrue(IsResult);
         }
 
@@ -141,7 +141,7 @@ namespace Geevers.Infrastructure.Test
             // assert
             Assert.IsFalse(IsResult);
             Assert.AreEqual(response.Status, status);
-            Assert.AreEqual(response.Result, result);
+            Assert.AreEqual(response.Value, result);
         }
 
         [TestMethod]
@@ -153,7 +153,7 @@ namespace Geevers.Infrastructure.Test
             // act
             // assert
             Assert.AreEqual(HttpStatusCode.NotImplemented, response.Status);
-            Assert.AreEqual(default, response.Result);
+            Assert.AreEqual(default, response.Value);
         }
 
         [TestMethod]
@@ -165,7 +165,7 @@ namespace Geevers.Infrastructure.Test
             // act
             // assert
             Assert.AreEqual(HttpStatusCode.Accepted, response.Status);
-            Assert.AreEqual(Color.Blue, response.Result);
+            Assert.AreEqual(Color.Blue, response.Value);
         }
 
         [TestMethod]
@@ -178,71 +178,27 @@ namespace Geevers.Infrastructure.Test
             Response<ICollection<Color>> response = (HttpStatusCode.OK, colors); // Compiler does not allow `Response<ICollection<Color>> response = colors`
 
             // assert
-            Assert.AreEqual(colors, response.Result);
+            Assert.AreEqual(colors, response.Value);
         }
 
         [TestMethod]
-        public void EveryResponseCreatedWithSuccessfullStatusAndResult_PropertyResultHoldsThatValue()
+        public void EveryResponseCreatedWithAnyStatusAndResult_PropertyValueHoldsValue()
         {
             // arrange
-            var statii = Enum.GetValues(typeof(HttpStatusCode))
+            Enum.GetValues(typeof(HttpStatusCode))
                 .Cast<HttpStatusCode>()
-                .Where(s => s.IsSuccessStatusCode());
-
-            // act
-            var responses = statii
-                .Select(s => (Response<int>)(s, 42));
-
-            // assert
-            Assert.IsTrue(responses.All(r => r.Result == 42));
+                .ToList()
+                .ForEach(EveryResponseCreatedWithStatusAndResult_PropertyValueHoldsValue);
         }
 
-        [TestMethod]
-        public void EveryResponseCreatedWithUnsuccessfullStatusAndResult_PropertyResultHoldsDefault()
+        private void EveryResponseCreatedWithStatusAndResult_PropertyValueHoldsValue(HttpStatusCode s)
         {
-            // arrange
-            var statii = Enum.GetValues(typeof(HttpStatusCode))
-                .Cast<HttpStatusCode>()
-                .Where(s => false == s.IsSuccessStatusCode());
-
             // act
-            var responses = statii
-                .Select(s => (Response<int>)(s, 42));
+            var response = (Response<int>)(s, 42);
 
             // assert
-            Assert.IsTrue(responses.All(r => r.Result == default));
-        }
-
-        [TestMethod]
-        public void EveryResponseCreatedWithSuccessfullStatusAndResult_PropertyErrorHoldsDefault()
-        {
-            // arrange
-            var statii = Enum.GetValues(typeof(HttpStatusCode))
-                .Cast<HttpStatusCode>()
-                .Where(s => s.IsSuccessStatusCode());
-
-            // act
-            var responses = statii
-                .Select(s => (Response<int>)(s, 42));
-
-            // assert
-            Assert.IsTrue(responses.All(r => r.Error == default));
-        }
-
-        [TestMethod]
-        public void EveryResponseCreatedWithUnsuccessfullStatusAndResult_PropertyErrorHoldsValue()
-        {
-            // arrange
-            var statii = Enum.GetValues(typeof(HttpStatusCode))
-                .Cast<HttpStatusCode>()
-                .Where(s => false == s.IsSuccessStatusCode());
-
-            // act
-            var responses = statii
-                .Select(s => (Response<int>)(s, 42));
-
-            // assert
-            Assert.IsTrue(responses.All(r => r.Error == 42));
+            Assert.AreEqual(s, response.Status);
+            Assert.AreEqual(42, response.Value);
         }
     }
 }
