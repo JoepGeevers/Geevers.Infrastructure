@@ -15,6 +15,9 @@
         public TValue Result => this.IsSuccessStatusCode ? this.value : default;
         public TValue Error => this.IsSuccessStatusCode ? default : this.value;
 
+        [Obsolete("Use `Result` or `Error` to obtain value. `Value` will be removed in a future version")]
+        public TValue Value => this.value;
+
         internal Response(TValue value)
         {
             this.status = HttpStatusCode.OK;
