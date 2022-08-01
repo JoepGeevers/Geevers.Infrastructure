@@ -12,6 +12,8 @@
         public HttpStatusCode Status => this.status ?? HttpStatusCode.NotImplemented;
         public bool IsSuccessStatusCode => this.Status.IsSuccessStatusCode();
         public TValue Value { get; private set; }
+        public TValue Result => this.Value;
+
 
         internal Response(TValue value)
         {
