@@ -46,5 +46,7 @@
 
         public static bool operator ==(Id<TEntity, TKey> p, Id<TEntity, TKey> q) => p.Equals(q);
         public static bool operator !=(Id<TEntity, TKey> p, Id<TEntity, TKey> q) => !(p == q);
+
+        public static implicit operator Id<TEntity, TKey>(TKey value) => new Id<TEntity, TKey>(value);
     }
 }

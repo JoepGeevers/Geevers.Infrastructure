@@ -30,6 +30,7 @@
             Assert.AreNotEqual(one, two);
             Assert.IsFalse(one.Equals(two));
             Assert.IsFalse(one == two);
+            Assert.IsTrue(one != two);
         }
 
         [TestMethod]
@@ -43,6 +44,7 @@
             Assert.AreEqual(one, two);
             Assert.IsTrue(one.Equals(two));
             Assert.IsTrue(one == two);
+            Assert.IsFalse(one != two);
         }
     }
 }
