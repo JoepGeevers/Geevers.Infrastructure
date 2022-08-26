@@ -8,6 +8,11 @@
         {
         }
 
+        public static Guid<TEntity> New()
+        {
+            return Guid.NewGuid();
+        }
+
         public static implicit operator Guid<TEntity>(Guid value) => new Guid<TEntity>(value);
     }
 }
