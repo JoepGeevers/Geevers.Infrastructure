@@ -1,6 +1,7 @@
 ﻿namespace Geevers.Infrastructure
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
 
     public class Id<TEntity, TKey> : IEquatable<Id<TEntity, TKey>>
@@ -17,12 +18,34 @@
             this.Value = value;
         }
 
-        private bool IsNullDefaultOrEmpty(TKey value) =>
-            EqualityComparer<TKey>
-                .Default
-                .Equals(value, default) // https://stackoverflow.com/a/864860 ~ "Wow, how delightfully obscure! This is definitely the way to go though, kudos. – Nick Farina"
-            ||
-                value as string == "";
+        private bool IsNullDefaultOrEmpty(TKey value)
+        {
+            return this.IsNullOrDefault(value)
+                || this.IsEmpty(value);
+        }
+
+        private bool IsEmpty(TKey value)
+        {
+            var enumerable = value as IEnumerable;
+
+            if (enumerable == null)
+            {
+                return false;
+            }
+
+            if (enumerable.GetEnumerator().MoveNext())
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool IsNullOrDefault(TKey value)
+        {
+            // https://stackoverflow.com/a/864860 ~ "Wow, how delightfully obscure!"
+            return EqualityComparer<TKey>.Default.Equals(value, default);
+        }
 
         public bool Equals(Id<TEntity, TKey> other)
         {

@@ -110,5 +110,36 @@
             // assert
             Assert.AreEqual("hi", id.Value);
         }
+
+        [TestMethod]
+        public void EmptyArrayIsNotAllowed()
+        {
+            // arrange
+            var caught = default(ArgumentException);
+
+            // act
+            try
+            {
+                var id = new Id<Id_2_Constructor_Test, byte[]>(new byte[0]);
+            }
+            catch (ArgumentException e)
+            {
+                caught = e;
+            }
+
+            // assert
+            Assert.IsNotNull(caught);
+            Assert.AreEqual("Id<T> cannot be null, default or empty", caught.Message);
+        }
+
+        [TestMethod]
+        public void NonEmptyArrayWorks()
+        {
+            // act
+            var id = new Id<Id_2_Constructor_Test, byte[]>(new byte[1] { new byte() });
+
+            // assert
+            CollectionAssert.AreEquivalent(new byte[1] { new byte() }, id.Value);
+        }
     }
 }
