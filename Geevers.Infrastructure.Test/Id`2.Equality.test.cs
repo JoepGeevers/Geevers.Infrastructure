@@ -46,5 +46,43 @@
             Assert.IsTrue(one == two);
             Assert.IsFalse(one != two);
         }
+
+        [TestMethod]
+        public void IfFirstIsNullTheyAreNotTheSame()
+        {
+            // arrange
+            var one = default(Id<Id_2_Constructor_Test, int>);
+            var two = new Id<Id_2_Constructor_Test, int>(123);
+
+            // assert
+            Assert.AreNotEqual(one, two);
+            Assert.IsFalse(one == two);
+            Assert.IsTrue(one != two);
+        }
+
+        [TestMethod]
+        public void IfSecondIsNullTheyAreNotTheSame()
+        {
+            // arrange
+            var one = new Id<Id_2_Constructor_Test, int>(123);
+            var two = default(Id<Id_2_Constructor_Test, int>);
+
+            // assert
+            Assert.AreNotEqual(one, two);
+            Assert.IsFalse(one == two);
+            Assert.IsTrue(one != two);
+        }
+
+        [TestMethod]
+        public void IfBothAreNullTheyAreNotTheSame()
+        {
+            // arrange
+            var one = default(Id<Id_2_Constructor_Test, int>);
+            var two = default(Id<Id_2_Constructor_Test, int>);
+
+            // assert
+            Assert.IsFalse(one == two);
+            Assert.IsTrue(one != two);
+        }
     }
 }

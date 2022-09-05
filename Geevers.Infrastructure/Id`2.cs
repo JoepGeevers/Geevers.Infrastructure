@@ -49,6 +49,11 @@
 
         public bool Equals(Id<TEntity, TKey> other)
         {
+            if (EqualityComparer<Id<TEntity, TKey>>.Default.Equals(other, default(Id<TEntity, TKey>)))
+            {
+                return false;
+            }
+
             return this.Value.Equals(other.Value);
         }
 
@@ -67,7 +72,11 @@
             return -1937169414 + this.Value.GetHashCode();
         }
 
-        public static bool operator ==(Id<TEntity, TKey> p, Id<TEntity, TKey> q) => p.Equals(q);
+        public static bool operator ==(Id<TEntity, TKey> p, Id<TEntity, TKey> q)
+        {
+            return p?.Equals(q) ?? false;
+        }
+
         public static bool operator !=(Id<TEntity, TKey> p, Id<TEntity, TKey> q) => !(p == q);
 
         public static implicit operator Id<TEntity, TKey>(TKey value) => new Id<TEntity, TKey>(value);
