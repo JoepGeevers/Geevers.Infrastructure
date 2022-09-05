@@ -74,15 +74,15 @@
         }
 
         [TestMethod]
-        public void IfBothAreNullTheyAreNotTheSame()
+        public void IfBothAreNullTheyAreTheSame()
         {
             // arrange
             var one = default(Id<Id_2_Constructor_Test, int>);
             var two = default(Id<Id_2_Constructor_Test, int>);
 
             // assert
-            Assert.IsFalse(one == two);
-            Assert.IsTrue(one != two);
+            Assert.IsTrue(one == two);
+            Assert.IsFalse(one != two);
         }
     }
 }

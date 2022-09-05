@@ -15,7 +15,9 @@
             // assert
             Assert.AreNotEqual(one, two);
             Assert.IsFalse(one == two);
+            Assert.IsFalse(two == one);
             Assert.IsTrue(one != two);
+            Assert.IsTrue(two != one);
         }
 
         [TestMethod]
@@ -28,19 +30,21 @@
             // assert
             Assert.AreNotEqual(one, two);
             Assert.IsFalse(one == two);
+            Assert.IsFalse(two == one);
             Assert.IsTrue(one != two);
+            Assert.IsTrue(two != one);
         }
 
         [TestMethod]
-        public void IfBothAreNullTheyAreNotTheSame()
+        public void IfBothAreNullTheyAreTheSame()
         {
             // arrange
             var one = default(Guid<Id_2_Constructor_Test>);
             var two = default(Guid<Id_2_Constructor_Test>);
 
             // assert
-            Assert.IsFalse(one == two);
-            Assert.IsTrue(one != two);
+            Assert.IsTrue(one == two);
+            Assert.IsFalse(one != two);
         }
     }
 }

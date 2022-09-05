@@ -74,6 +74,11 @@
 
         public static bool operator ==(Id<TEntity, TKey> p, Id<TEntity, TKey> q)
         {
+            if (p is null && q is null)
+            {
+                return true;
+            }
+
             return p?.Equals(q) ?? false;
         }
 
