@@ -82,6 +82,11 @@
             return p?.Equals(q) ?? false;
         }
 
+        public override string ToString()
+        {
+            return this.Value.ToString();
+        }
+
         public static bool operator !=(Id<TEntity, TKey> p, Id<TEntity, TKey> q) => !(p == q);
 
         public static implicit operator Id<TEntity, TKey>(TKey value) => new Id<TEntity, TKey>(value);
