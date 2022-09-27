@@ -4,6 +4,7 @@
     using System.Collections;
     using System.Collections.Generic;
 
+    [Serializable]
     public class Id<TEntity, TKey> : IEquatable<Id<TEntity, TKey>>
     {
         public readonly TKey Value;

@@ -2,6 +2,7 @@
 {
     using System;
 
+    [Serializable]
     public class Guid<TEntity> : Id<TEntity, Guid>
     {
         public Guid(Guid value) : base(value)
